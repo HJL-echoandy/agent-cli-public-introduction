@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向企业服务的 Agent CLI 公开项目介绍">
+  <title>面向企业服务的 Agent CLI</title>
+  <style>
+    :root {
+      --paper: #fff; --canvas: #edf0f2; --ink: #20252a; --muted: #68737d;
+      --line: #d9dfe3; --soft: #f5f7f8; --green: #34745c; --green-soft: #eaf4ef;
+      --blue: #3e6f9d; --amber: #a66a19;
+      --serif: "Songti SC", STSong, "Noto Serif CJK SC", serif;
+      --sans: "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font: 17px/1.78 var(--serif); text-rendering: optimizeLegibility; }
+    code { padding: .08em .28em; border-radius: 4px; background: #edf1f3; color: #31475a; font: .86em/1.55 var(--mono); }
+    .site-shell { display: grid; grid-template-columns: 220px minmax(0, 900px); gap: 34px; justify-content: center; align-items: start; padding: 38px 24px 80px; }
+    .site-nav { position: sticky; top: 22px; max-height: calc(100vh - 44px); overflow: auto; color: var(--muted); font: 13px/1.5 var(--sans); }
+    .site-nav .mark { margin: 0 0 15px; color: var(--ink); font-weight: 700; letter-spacing: .12em; }
+    .site-nav ol { margin: 0; padding: 0; border-left: 1px solid #c8d0d5; list-style: none; }
+    .site-nav a { display: block; margin-left: -1px; padding: 6px 10px 6px 14px; border-left: 2px solid transparent; color: inherit; text-decoration: none; }
+    .site-nav a:hover { border-left-color: var(--green); color: var(--ink); }
+    main { min-width: 0; padding: 70px 78px 82px; background: var(--paper); box-shadow: 0 14px 46px rgb(25 38 48 / 10%); counter-reset: section; }
+    .hero { margin-bottom: 54px; padding-top: 28px; border-top: 5px solid var(--ink); }
+    .eyebrow { color: var(--green); font: 700 12px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+    h1 { string-set: article-title content(text); max-width: 780px; margin: 15px 0 17px; font: 700 40px/1.2 var(--sans); letter-spacing: -.025em; }
+    .deck { max-width: 760px; margin: 0 0 28px; color: #52606b; font-size: 19px; line-height: 1.65; }
+    .hero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 28px 0; border: 1px solid var(--line); background: var(--line); }
+    .hero-grid div { padding: 15px 16px; background: white; }
+    .hero-grid dt { color: var(--muted); font: 700 11px/1.2 var(--sans); letter-spacing: .07em; }
+    .hero-grid dd { margin: 5px 0 0; font: 650 14px/1.45 var(--sans); }
+    .lead { margin: 30px 0 0; padding: 22px 25px; border-left: 4px solid var(--green); background: var(--soft); font-size: 17.5px; }
+    .lead strong { display: block; margin-bottom: 7px; color: var(--green); font: 700 13px/1.4 var(--sans); letter-spacing: .08em; }
+    .lead p { margin: 0; }
+    h2, h3 { color: #172028; font-family: var(--sans); break-after: avoid-page; }
+    h2 { string-set: section-title content(text); margin: 58px 0 22px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 28px; line-height: 1.28; counter-increment: section; }
+    h2::before { content: counter(section, decimal-leading-zero) "  "; color: var(--green); font-size: .72em; letter-spacing: .08em; }
+    h3 { margin: 34px 0 13px; font-size: 20px; line-height: 1.38; }
+    h2 + *, h3 + * { break-before: avoid-page; page-break-before: avoid; }
+    p { margin: 0 0 1em; widows: 3; orphans: 3; }
+    .figure { display: inline-block; width: 100%; margin: 30px 0 32px; break-inside: avoid; page-break-inside: avoid; vertical-align: top; }
+    .figure svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+    figcaption { margin: 13px auto 0; color: #4a555e; font-size: 13.5px; line-height: 1.62; }
+    figcaption strong { font-family: var(--sans); }
+    .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 22px 0 28px; }
+    .card { padding: 18px 20px; border: 1px solid var(--line); border-top: 4px solid var(--green); border-radius: 7px; break-inside: avoid-page; }
+    .card h3 { margin: 0 0 7px; color: #244f75; font-size: 16px; }
+    .card p { margin: 0; color: #46535d; font-size: 15px; line-height: 1.65; }
+    .layer-stack { display: grid; gap: 10px; margin: 22px 0 30px; }
+    .layer { display: grid; grid-template-columns: 150px 1fr; gap: 18px; padding: 16px 18px; border-left: 4px solid var(--amber); background: #fbf3e4; break-inside: avoid-page; }
+    .layer b { font: 700 14px/1.5 var(--sans); }
+    .layer p { margin: 0; font-size: 15px; }
+    .sequence { margin: 22px 0 28px; }
+    .sequence-item { position: relative; display: inline-block; width: 100%; min-height: 30px; padding: 3px 0 20px 48px; break-inside: avoid-page; vertical-align: top; }
+    .sequence-item:not(:last-child)::after { content: ""; position: absolute; top: 30px; bottom: 0; left: 14px; width: 1px; background: #b9cdc4; }
+    .sequence .n { position: absolute; z-index: 1; top: 0; left: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--green); color: white; font: 700 12px/1 var(--sans); }
+    .sequence .step strong { font-family: var(--sans); }
+    .sequence .step p { margin: 5px 0 0; font-size: 15px; }
+    .callout { margin: 24px 0; padding: 18px 21px; border-left: 4px solid var(--blue); background: #eef5fa; break-inside: avoid-page; }
+    .callout strong { font-family: var(--sans); }
+    .boundary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0; }
+    .boundary div { padding: 16px 18px; border: 1px solid var(--line); background: var(--soft); break-inside: avoid-page; }
+    .boundary b { display: block; margin-bottom: 6px; font: 700 14px/1.4 var(--sans); }
+    .boundary p { margin: 0; font-size: 14.5px; line-height: 1.62; }
+    .footer-note { margin-top: 54px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font: 12px/1.6 var(--sans); }
+    @page {
+      size: A4; margin: 19mm 18mm 18mm;
+      @top-left { content: string(article-title); color: #68717a; font: 8pt "Hiragino Sans GB", sans-serif; }
+      @top-right { content: "项目介绍"; color: #68717a; font: 8pt "Hiragino Sans GB", sans-serif; }
+      @bottom-center { content: counter(page) " / " counter(pages); color: #68717a; font: 8pt Arial, sans-serif; }
+    }
+    @page :first { @top-left { content: none; } @top-right { content: none; } }
+    @media print {
+      body { background: white; font-size: 10.3pt; line-height: 1.62; }
+      .site-shell { display: block; padding: 0; } .site-nav { display: none !important; }
+      main { padding: 0; box-shadow: none; } .hero { margin-bottom: 8mm; }
+      h1 { font-size: 25pt; } h2 { margin: 8mm 0 4mm; font-size: 18pt; } h3 { font-size: 13.5pt; }
+      .figure, .card, .layer, .callout, .boundary div { break-inside: avoid-page; }
+      h2, h3 { break-after: avoid-page !important; page-break-after: avoid; }
+      h2 + *, h3 + * { break-before: avoid-page !important; page-break-before: avoid; }
+      .cards, .boundary { break-inside: avoid-page; }
+      .footer-note { margin-top: 4mm; }
+    }
+    @media (max-width: 1000px) {
+      .site-shell { display: block; padding: 0; } .site-nav { position: static; max-height: none; padding: 20px; border-bottom: 1px solid var(--line); background: white; }
+      .site-nav ol { columns: 2; } main { padding: 44px clamp(20px, 6vw, 62px) 70px; box-shadow: none; }
+    }
+    @media (max-width: 680px) {
+      body { font-size: 16px; line-height: 1.73; } .site-shell { width: 100%; overflow: hidden; }
+      .site-nav { padding: 14px 20px 16px; } .site-nav ol { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-left: 0; white-space: nowrap; }
+      .site-nav li { flex: none; } .site-nav a { margin: 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--soft); }
+      main { width: 100%; max-width: 100%; padding-inline: 20px; overflow: hidden; } h1 { font-size: 30px; } h2 { font-size: 23px; }
+      .hero-grid, .cards, .boundary { grid-template-columns: 1fr; } .layer { grid-template-columns: 1fr; }
+      .figure { overflow: hidden; }
+    }
+  </style>
+  <script>
+    window.PagedConfig = { auto: false, before: async function () { await document.fonts.ready; } };
+    if (new URLSearchParams(location.search).get("paged") === "1") {
+      window.PagedConfig.auto = true;
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/pagedjs@0.4.3/dist/paged.polyfill.js";
+      document.head.appendChild(script);
+    }
+  </script>
+</head>
+<body>
+  <div class="site-shell">
+    <nav class="site-nav" aria-label="文章目录">
+      <p class="mark">PROJECT OVERVIEW</p>
+      <ol>
+        <li><a href="#why">项目要解决什么问题</a></li>
+        <li><a href="#architecture">整体架构</a></li>
+        <li><a href="#capability">能力如何被接入</a></li>
+        <li><a href="#interfaces">面向谁使用</a></li>
+        <li><a href="#boundary">安全与边界</a></li>
+      </ol>
+    </nav>
+    <main>
+      <header class="hero">
+        <div class="eyebrow">PUBLIC PROJECT OVERVIEW</div>
+        <h1>面向企业服务的 Agent CLI</h1>
+        <p class="deck">把分散在不同系统中的工程能力，整理成可发现、可调用、可复用的命令接口，让工程师、自动化程序与 AI Agent 使用同一套能力入口。</p>
+        <div class="hero-grid">
+          <div><dt>项目定位</dt><dd>企业服务的统一 CLI 入口</dd></div>
+          <div><dt>服务对象</dt><dd>工程师 · 脚本 · AI Agent</dd></div>
+          <div><dt>核心价值</dt><dd>连接能力，降低重复集成成本</dd></div>
+        </div>
+        <div class="lead"><strong>一句话理解</strong><p>项目将企业服务包装成一组具有稳定输入、明确结果和可发现说明的命令能力；不同调用者共享同一执行内核，同时保留各个服务自己的协议、权限和数据边界。</p></div>
+      </header>
+
+      <section id="why">
+        <h2>项目要解决什么问题</h2>
+        <p>企业中的工程任务往往跨越多个系统：查询状态、提交变更、检查配置、触发流程、获取结果。能力分散在网页、接口、脚本和人工操作中，会带来三个长期问题：调用方式不一致、自动化重复建设、人与 Agent 难以共享同一套操作语义。</p>
+        <div class="cards">
+          <article class="card"><h3>入口分散</h3><p>同一项工作可能有控制台、接口和脚本多种入口，使用者需要记住不同的参数、认证方式和结果格式。</p></article>
+          <article class="card"><h3>重复集成</h3><p>每个自动化任务都重新处理请求、错误、凭据和输出，平台差异不断扩散到业务脚本中。</p></article>
+          <article class="card"><h3>Agent 难以发现</h3><p>Agent 不仅需要“能执行”，还需要知道能力做什么、需要哪些输入、失败后如何继续。</p></article>
+          <article class="card"><h3>治理难统一</h3><p>超时、日志、敏感信息、确认动作和机器可读结果如果由各个脚本自行处理，很难保持一致。</p></article>
+        </div>
+      </section>
+
+      <section id="architecture">
+        <h2>整体架构</h2>
+        <p>项目采用共享 CLI 核心的组织方式。调用者通过终端、脚本、Shell、进程工具或 MCP 适配进入同一个命令系统；命令系统再将统一的任务契约交给编排层和服务适配层。运行时治理横向服务于各个环节，企业服务继续保留自己的协议和权限边界。</p>
+        <figure class="figure">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 820" width="1500" height="820" font-family="Hiragino Sans GB, Heiti SC, Microsoft YaHei, Arial, sans-serif">
+  <rect width="1500" height="820" fill="#FFFFFF"/>
+  <defs>
+    <marker id="public1-arrow-default" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#555555"/>
+    </marker>
+    <marker id="public1-arrow-c0" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F6F9F"/>
+    </marker>
+    <marker id="public1-arrow-c1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F775F"/>
+    </marker>
+    <marker id="public1-arrow-c2" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#B47A24"/>
+    </marker>
+    <marker id="public1-arrow-c3" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#74659A"/>
+    </marker>
+    <marker id="public1-arrow-c4" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#68717A"/>
+    </marker>
+  </defs>
+  <rect x="62.0" y="51.0" width="861.0" height="128.0" fill="#F8FBFD" stroke="#CBD9E6" stroke-width="1" rx="8"/>
+  <text x="70.0" y="67.0" font-size="22" fill="#999999" font-weight="600">调用者</text>
+  <rect x="212.0" y="217.0" width="896.0" height="146.0" fill="#F8FCFA" stroke="#C6DDD1" stroke-width="1" rx="8"/>
+  <text x="220.0" y="233.0" font-size="22" fill="#999999" font-weight="600">接入方式</text>
+  <rect x="75.0" y="419.0" width="1020.0" height="152.0" fill="#FFFBF2" stroke="#E2CFAB" stroke-width="1" rx="8"/>
+  <text x="83.0" y="435.0" font-size="22" fill="#999999" font-weight="600">共享 CLI 核心</text>
+  <path d="M 226.3,151.0 L 347.1,245.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 456.6,151.0 L 421.7,245.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 718.7,151.0 Q 600.5,170.6 506.6,245.0" stroke="#3F6F9F" stroke-width="3" fill="none" marker-end="url(#public1-arrow-c0)"/>
+  <rect x="527.0" y="166.3" width="159.2" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="606.6" y="178.3" font-size="21" fill="#777777" text-anchor="middle">Shell / exec</text>
+  <path d="M 825.7,151.0 L 892.9,245.0" stroke="#3F6F9F" stroke-width="3" fill="none" marker-end="url(#public1-arrow-c0)"/>
+  <rect x="836.4" y="180.0" width="45.8" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="859.3" y="192.0" font-size="21" fill="#777777" text-anchor="middle">MCP</text>
+  <path d="M 1045.0,115.0 L 895.0,115.0" stroke="#74659A" stroke-width="2" fill="none" marker-end="url(#public1-arrow-c3)" stroke-dasharray="8,4"/>
+  <rect x="945.0" y="97.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="970.0" y="109.0" font-size="21" fill="#777777" text-anchor="middle">指导</text>
+  <path d="M 365.5,335.0 L 265.4,449.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 771.3,335.0 Q 549.7,368.6 345.0,459.9" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 345.0,495.0 L 430.0,495.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 690.0,495.0 L 785.0,495.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 1065.0,495.0 L 1185.0,495.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public1-arrow-default)"/>
+  <path d="M 321.7,541.0 L 542.5,646.0" stroke="#68717A" stroke-width="2" fill="none" marker-end="url(#public1-arrow-c4)" stroke-dasharray="8,4"/>
+  <path d="M 577.7,541.0 L 618.1,646.0" stroke="#68717A" stroke-width="2" fill="none" marker-end="url(#public1-arrow-c4)" stroke-dasharray="8,4"/>
+  <path d="M 856.6,541.0 L 700.4,646.0" stroke="#68717A" stroke-width="2" fill="none" marker-end="url(#public1-arrow-c4)" stroke-dasharray="8,4"/>
+  <rect x="90.0" y="79.0" width="180.0" height="72.0" fill="#E8F1FA" stroke="#3F6F9F" stroke-width="2" rx="8"/>
+  <text x="180.0" y="123.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">工程师</text>
+  <rect x="360.0" y="79.0" width="220.0" height="72.0" fill="#E8F1FA" stroke="#3F6F9F" stroke-width="2" rx="8"/>
+  <text x="470.0" y="123.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">自动化程序</text>
+  <rect x="705.0" y="79.0" width="190.0" height="72.0" fill="#E8F1FA" stroke="#3F6F9F" stroke-width="2" rx="8"/>
+  <text x="800.0" y="123.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">AI Agent</text>
+  <rect x="1045.0" y="74.0" width="230.0" height="82.0" fill="#EEE9F6" stroke="#74659A" stroke-width="2" rx="8"/>
+  <text x="1160.0" y="110.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">任务知识</text>
+  <text x="1160.0" y="136.4" font-size="21" fill="#888888" text-anchor="middle">使用建议与流程说明</text>
+  <rect x="240.0" y="245.0" width="330.0" height="90.0" fill="#E5F1EC" stroke="#3F775F" stroke-width="2" rx="8"/>
+  <text x="405.0" y="285.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">CLI 进程</text>
+  <text x="405.0" y="311.4" font-size="21" fill="#888888" text-anchor="middle">终端 / Shell / 进程调用</text>
+  <rect x="770.0" y="245.0" width="310.0" height="90.0" fill="#E5F1EC" stroke="#3F775F" stroke-width="2" rx="8"/>
+  <text x="925.0" y="285.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">MCP 适配</text>
+  <text x="925.0" y="311.4" font-size="21" fill="#888888" text-anchor="middle">能力发现与调用转换</text>
+  <rect x="105.0" y="449.0" width="240.0" height="92.0" fill="#FFF1D6" stroke="#B47A24" stroke-width="2" rx="8"/>
+  <text x="225.0" y="490.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">命令层</text>
+  <text x="225.0" y="516.4" font-size="21" fill="#888888" text-anchor="middle">统一入口与帮助</text>
+  <rect x="430.0" y="449.0" width="260.0" height="92.0" fill="#FFF1D6" stroke="#B47A24" stroke-width="2" rx="8"/>
+  <text x="560.0" y="490.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">任务编排</text>
+  <text x="560.0" y="516.4" font-size="21" fill="#888888" text-anchor="middle">校验、选择与组合</text>
+  <rect x="785.0" y="449.0" width="280.0" height="92.0" fill="#FFF1D6" stroke="#B47A24" stroke-width="2" rx="8"/>
+  <text x="925.0" y="490.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">服务适配层</text>
+  <text x="925.0" y="516.4" font-size="21" fill="#888888" text-anchor="middle">协议与数据形态隔离</text>
+  <rect x="220.0" y="646.0" width="830.0" height="88.0" fill="#F1F3F5" stroke="#68717A" stroke-width="2" rx="8"/>
+  <text x="635.0" y="685.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">运行时治理</text>
+  <text x="635.0" y="711.4" font-size="21" fill="#888888" text-anchor="middle">认证、配置、传输、输出与日志</text>
+  <rect x="1185.0" y="449.0" width="280.0" height="92.0" fill="#F1F3F5" stroke="#68717A" stroke-width="2" rx="8"/>
+  <text x="1325.0" y="490.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">企业服务</text>
+  <text x="1325.0" y="516.4" font-size="21" fill="#888888" text-anchor="middle">代码、交付、配置、数据与观测能力</text>
+</svg>
+          <figcaption><strong>图 1　公开架构概览。</strong>工程师、自动化程序和 AI Agent 可以通过不同方式进入共享 CLI 核心，任务知识为 Agent 提供使用指导；核心负责统一入口、任务组织和服务适配，运行时治理提供跨能力的一致执行规则。</figcaption>
+        </figure>
+        <div class="layer-stack">
+          <div class="layer"><b>调用层</b><p>终端、脚本和 Agent 都是调用者。它们可以选择适合自己的接入方式，但不需要维护各自独立的业务实现。</p></div>
+          <div class="layer"><b>命令层</b><p>定义用户可以发现和调用的能力，提供统一的参数说明、帮助信息和结果约定。</p></div>
+          <div class="layer"><b>任务层</b><p>把一次命令表达为可复用的业务任务，负责输入组织、目标选择、跨服务组合和结果汇总。</p></div>
+          <div class="layer"><b>适配层</b><p>隔离不同企业服务的接口、数据格式和访问方式，让上层使用稳定的能力模型。</p></div>
+          <div class="layer"><b>治理层</b><p>统一处理认证、配置、网络、日志、输出和安全控制等通用问题。</p></div>
+        </div>
+      </section>
+
+      <section id="capability">
+        <h2>能力如何被接入</h2>
+        <p>接入一项新能力时，首先定义它对使用者呈现的任务契约，再把后端差异收敛在适配层中。公众使用者不需要了解后端由哪个系统提供，只需要面对清晰的命令和结果。</p>
+        <figure class="figure">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 430" width="1400" height="430" font-family="Hiragino Sans GB, Heiti SC, Microsoft YaHei, Arial, sans-serif">
+  <rect width="1400" height="430" fill="#FFFFFF"/>
+  <defs>
+    <marker id="public2-arrow-default" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#555555"/>
+    </marker>
+    <marker id="public2-arrow-c0" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F6F9F"/>
+    </marker>
+    <marker id="public2-arrow-c1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F775F"/>
+    </marker>
+    <marker id="public2-arrow-c2" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#B47A24"/>
+    </marker>
+    <marker id="public2-arrow-c3" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#68717A"/>
+    </marker>
+  </defs>
+  <path d="M 260.0,215.0 L 345.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public2-arrow-default)"/>
+  <rect x="277.5" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="302.5" y="209.0" font-size="21" fill="#777777" text-anchor="middle">抽象</text>
+  <path d="M 575.0,215.0 L 655.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public2-arrow-default)"/>
+  <rect x="590.0" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="615.0" y="209.0" font-size="21" fill="#777777" text-anchor="middle">连接</text>
+  <path d="M 885.0,215.0 L 985.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#public2-arrow-default)"/>
+  <rect x="910.0" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="935.0" y="209.0" font-size="21" fill="#777777" text-anchor="middle">复用</text>
+  <rect x="40.0" y="169.0" width="220.0" height="92.0" fill="#E8F1FA" stroke="#3F6F9F" stroke-width="2" rx="8"/>
+  <text x="150.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">业务能力</text>
+  <text x="150.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">一个可重复的工作任务</text>
+  <rect x="345.0" y="169.0" width="230.0" height="92.0" fill="#E5F1EC" stroke="#3F775F" stroke-width="2" rx="8"/>
+  <text x="460.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">统一契约</text>
+  <text x="460.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">输入、结果与恢复</text>
+  <rect x="655.0" y="169.0" width="230.0" height="92.0" fill="#FFF1D6" stroke="#B47A24" stroke-width="2" rx="8"/>
+  <text x="770.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">服务适配</text>
+  <text x="770.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">隔离平台差异</text>
+  <rect x="985.0" y="169.0" width="250.0" height="92.0" fill="#F1F3F5" stroke="#68717A" stroke-width="2" rx="8"/>
+  <text x="1110.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="600">多入口复用</text>
+  <text x="1110.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">终端、脚本与 Agent</text>
+</svg>
+          <figcaption><strong>图 2　能力接入的抽象链路。</strong>一项业务能力先被整理为统一契约，再由服务适配层连接具体平台，最终通过终端、脚本和 Agent 复用。图中只表达公开架构关系，不展开具体平台协议。</figcaption>
+        </figure>
+        <div class="sequence">
+          <div class="sequence-item"><div class="n">1</div><div class="step"><strong>描述任务</strong><p>说明这项能力解决什么问题、需要哪些业务输入、会返回什么结果，以及哪些操作需要确认。</p></div></div>
+          <div class="sequence-item"><div class="n">2</div><div class="step"><strong>连接服务</strong><p>将具体服务的接口、认证和数据格式封装在适配层中，避免平台细节扩散到调用者。</p></div></div>
+          <div class="sequence-item"><div class="n">3</div><div class="step"><strong>统一交互</strong><p>提供命令帮助、机器可读结果和可诊断错误，使人和自动化程序都能稳定使用。</p></div></div>
+          <div class="sequence-item"><div class="n">4</div><div class="step"><strong>复用能力</strong><p>同一项能力可以被终端用户、定时任务、流水线脚本和 AI Agent 组合到更大的工作流中。</p></div></div>
+        </div>
+      </section>
+
+      <section id="interfaces">
+        <h2>面向谁使用</h2>
+        <div class="boundary">
+          <div><b>工程师</b><p>通过终端查看帮助、执行任务和处理结果，保留熟悉的命令行工作方式。</p></div>
+          <div><b>自动化程序</b><p>通过稳定参数、JSON 结果和退出状态，把能力接入脚本、流水线和定时任务。</p></div>
+          <div><b>AI Agent</b><p>可以通过 Shell 或进程工具调用 CLI，也可以通过 MCP 进行能力发现与调用。</p></div>
+          <div><b>任务知识</b><p>用独立的说明描述使用时机、组合顺序和恢复建议，帮助 Agent 正确使用已有能力。</p></div>
+        </div>
+        <p>不同使用者共享同一个执行内核，因此命令含义、参数约束和结果语义不会因为调用入口不同而分裂。入口可以变化，能力本身保持一致。</p>
+      </section>
+
+      <section id="boundary">
+        <h2>安全与边界</h2>
+        <p>这个项目连接企业能力，但不替代企业服务本身的授权系统。调用者仍然使用自己拥有的身份和权限；后端继续负责最终授权判断，CLI 负责把认证、确认和输出等执行规则表达得更清晰。</p>
+        <div class="callout"><strong>公开版本的边界：</strong>本文只介绍架构思想和公开抽象，不包含内部服务名称、真实地址、组织标识、凭据格式、员工信息或可直接访问企业系统的示例。</div>
+        <div class="cards">
+          <article class="card"><h3>权限仍在服务侧</h3><p>CLI 不绕过后端权限，也不把不同服务的授权规则假设成一种固定模型。</p></article>
+          <article class="card"><h3>敏感信息不进入公开契约</h3><p>公开命令和架构说明只表达业务必要字段，内部地址、凭据和环境细节留在受控配置中。</p></article>
+          <article class="card"><h3>写操作需要明确意图</h3><p>涉及变更的能力可以通过预览、确认和策略控制降低误操作风险。</p></article>
+          <article class="card"><h3>Agent 不是新的后端</h3><p>Agent 负责选择和组合能力，实际执行仍回到统一 CLI 契约与已有服务边界。</p></article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

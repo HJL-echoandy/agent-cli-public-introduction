@@ -1,0 +1,23 @@
+{
+  "title": "企业能力接入的公开抽象链路",
+  "canvas": {"width": 1400, "height": 430},
+  "style": {
+    "font_family": "Hiragino Sans GB, Heiti SC, Microsoft YaHei, Arial, sans-serif",
+    "font_size": 24,
+    "bg_color": "#FFFFFF",
+    "palette": ["#3F6F9F", "#3F775F", "#B47A24", "#68717A"]
+  },
+  "nodes": [
+    {"id": "need", "label": "业务能力", "sublabel": "一个可重复的工作任务", "x": 150, "y": 215, "width": 220, "height": 92, "shape": "rounded", "fill": "#E8F1FA", "stroke": "#3F6F9F", "text_color": "#20252A", "font_size": 24},
+    {"id": "contract", "label": "统一契约", "sublabel": "输入、结果与恢复", "x": 460, "y": 215, "width": 230, "height": 92, "shape": "rounded", "fill": "#E5F1EC", "stroke": "#3F775F", "text_color": "#20252A", "font_size": 24},
+    {"id": "adapter", "label": "服务适配", "sublabel": "隔离平台差异", "x": 770, "y": 215, "width": 230, "height": 92, "shape": "rounded", "fill": "#FFF1D6", "stroke": "#B47A24", "text_color": "#20252A", "font_size": 24},
+    {"id": "reuse", "label": "多入口复用", "sublabel": "终端、脚本与 Agent", "x": 1110, "y": 215, "width": 250, "height": 92, "shape": "rounded", "fill": "#F1F3F5", "stroke": "#68717A", "text_color": "#20252A", "font_size": 24}
+  ],
+  "edges": [
+    {"from": "need", "to": "contract", "label": "抽象", "color": "#2F3439", "thickness": 3},
+    {"from": "contract", "to": "adapter", "label": "连接", "color": "#2F3439", "thickness": 3},
+    {"from": "adapter", "to": "reuse", "label": "复用", "color": "#2F3439", "thickness": 3}
+  ],
+  "groups": [],
+  "labels": []
+}

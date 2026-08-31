@@ -1,0 +1,44 @@
+{
+  "title": "企业服务 Agent CLI 的公开架构概览",
+  "canvas": {"width": 1500, "height": 820},
+  "style": {
+    "font_family": "Hiragino Sans GB, Heiti SC, Microsoft YaHei, Arial, sans-serif",
+    "font_size": 24,
+    "bg_color": "#FFFFFF",
+    "palette": ["#3F6F9F", "#3F775F", "#B47A24", "#74659A", "#68717A"]
+  },
+  "nodes": [
+    {"id": "engineer", "label": "工程师", "x": 180, "y": 115, "width": 180, "height": 72, "shape": "rounded", "fill": "#E8F1FA", "stroke": "#3F6F9F", "text_color": "#20252A", "font_size": 24},
+    {"id": "automation", "label": "自动化程序", "x": 470, "y": 115, "width": 220, "height": 72, "shape": "rounded", "fill": "#E8F1FA", "stroke": "#3F6F9F", "text_color": "#20252A", "font_size": 24},
+    {"id": "agent", "label": "AI Agent", "x": 800, "y": 115, "width": 190, "height": 72, "shape": "rounded", "fill": "#E8F1FA", "stroke": "#3F6F9F", "text_color": "#20252A", "font_size": 24},
+    {"id": "knowledge", "label": "任务知识", "sublabel": "使用建议与流程说明", "x": 1160, "y": 115, "width": 230, "height": 82, "shape": "rounded", "fill": "#EEE9F6", "stroke": "#74659A", "text_color": "#20252A", "font_size": 24},
+    {"id": "process", "label": "CLI 进程", "sublabel": "终端 / Shell / 进程调用", "x": 405, "y": 290, "width": 330, "height": 90, "shape": "rounded", "fill": "#E5F1EC", "stroke": "#3F775F", "text_color": "#20252A", "font_size": 24},
+    {"id": "mcp", "label": "MCP 适配", "sublabel": "能力发现与调用转换", "x": 925, "y": 290, "width": 310, "height": 90, "shape": "rounded", "fill": "#E5F1EC", "stroke": "#3F775F", "text_color": "#20252A", "font_size": 24},
+    {"id": "command", "label": "命令层", "sublabel": "统一入口与帮助", "x": 225, "y": 495, "width": 240, "height": 92, "shape": "rounded", "fill": "#FFF1D6", "stroke": "#B47A24", "text_color": "#20252A", "font_size": 24},
+    {"id": "orchestration", "label": "任务编排", "sublabel": "校验、选择与组合", "x": 560, "y": 495, "width": 260, "height": 92, "shape": "rounded", "fill": "#FFF1D6", "stroke": "#B47A24", "text_color": "#20252A", "font_size": 24},
+    {"id": "adapters", "label": "服务适配层", "sublabel": "协议与数据形态隔离", "x": 925, "y": 495, "width": 280, "height": 92, "shape": "rounded", "fill": "#FFF1D6", "stroke": "#B47A24", "text_color": "#20252A", "font_size": 24},
+    {"id": "governance", "label": "运行时治理", "sublabel": "认证、配置、传输、输出与日志", "x": 635, "y": 690, "width": 830, "height": 88, "shape": "rounded", "fill": "#F1F3F5", "stroke": "#68717A", "text_color": "#20252A", "font_size": 24},
+    {"id": "services", "label": "企业服务", "sublabel": "代码、交付、配置、数据与观测能力", "x": 1325, "y": 495, "width": 280, "height": 92, "shape": "rounded", "fill": "#F1F3F5", "stroke": "#68717A", "text_color": "#20252A", "font_size": 24}
+  ],
+  "edges": [
+    {"from": "engineer", "to": "process", "color": "#2F3439", "thickness": 3},
+    {"from": "automation", "to": "process", "color": "#2F3439", "thickness": 3},
+    {"from": "agent", "to": "process", "label": "Shell / exec", "color": "#3F6F9F", "thickness": 3, "curve": true},
+    {"from": "agent", "to": "mcp", "label": "MCP", "color": "#3F6F9F", "thickness": 3},
+    {"from": "knowledge", "to": "agent", "label": "指导", "style": "dashed", "color": "#74659A", "thickness": 2},
+    {"from": "process", "to": "command", "color": "#2F3439", "thickness": 3},
+    {"from": "mcp", "to": "command", "color": "#2F3439", "thickness": 3, "curve": true},
+    {"from": "command", "to": "orchestration", "color": "#2F3439", "thickness": 3},
+    {"from": "orchestration", "to": "adapters", "color": "#2F3439", "thickness": 3},
+    {"from": "adapters", "to": "services", "color": "#2F3439", "thickness": 3},
+    {"from": "command", "to": "governance", "style": "dashed", "color": "#68717A", "thickness": 2},
+    {"from": "orchestration", "to": "governance", "style": "dashed", "color": "#68717A", "thickness": 2},
+    {"from": "adapters", "to": "governance", "style": "dashed", "color": "#68717A", "thickness": 2}
+  ],
+  "groups": [
+    {"id": "callers", "label": "调用者", "node_ids": ["engineer", "automation", "agent"], "fill": "#F8FBFD", "stroke": "#CBD9E6", "padding": 28},
+    {"id": "channels", "label": "接入方式", "node_ids": ["process", "mcp"], "fill": "#F8FCFA", "stroke": "#C6DDD1", "padding": 28},
+    {"id": "core", "label": "共享 CLI 核心", "node_ids": ["command", "orchestration", "adapters"], "fill": "#FFFBF2", "stroke": "#E2CFAB", "padding": 30}
+  ],
+  "labels": []
+}

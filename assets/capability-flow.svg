@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 430" width="1400" height="430" font-family="Hiragino Sans GB, Heiti SC, Microsoft YaHei, Arial, sans-serif">
+  <rect width="1400" height="430" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow-default" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#555555"/>
+    </marker>
+    <marker id="arrow-c0" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F6F9F"/>
+    </marker>
+    <marker id="arrow-c1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#3F775F"/>
+    </marker>
+    <marker id="arrow-c2" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#B47A24"/>
+    </marker>
+    <marker id="arrow-c3" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 8 4, 0 8" fill="#68717A"/>
+    </marker>
+  </defs>
+  <path d="M 260.0,215.0 L 345.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#arrow-default)"/>
+  <rect x="277.5" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="302.5" y="209.0" font-size="21" fill="#777777" text-anchor="middle">抽象</text>
+  <path d="M 575.0,215.0 L 655.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#arrow-default)"/>
+  <rect x="590.0" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="615.0" y="209.0" font-size="21" fill="#777777" text-anchor="middle">连接</text>
+  <path d="M 885.0,215.0 L 985.0,215.0" stroke="#2F3439" stroke-width="3" fill="none" marker-end="url(#arrow-default)"/>
+  <rect x="910.0" y="197.0" width="50.0" height="16" fill="#FFFFFF" rx="3" opacity="0.85"/>
+  <text x="935.0" y="209.0" font-size="21" fill="#777777" text-anchor="middle">复用</text>
+  <rect x="40.0" y="169.0" width="220.0" height="92.0" fill="#E8F1FA" stroke="#3F6F9F" stroke-width="2" rx="8"/>
+  <text x="150.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="bold">业务能力</text>
+  <text x="150.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">一个可重复的工作任务</text>
+  <rect x="345.0" y="169.0" width="230.0" height="92.0" fill="#E5F1EC" stroke="#3F775F" stroke-width="2" rx="8"/>
+  <text x="460.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="bold">统一契约</text>
+  <text x="460.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">输入、结果与恢复</text>
+  <rect x="655.0" y="169.0" width="230.0" height="92.0" fill="#FFF1D6" stroke="#B47A24" stroke-width="2" rx="8"/>
+  <text x="770.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="bold">服务适配</text>
+  <text x="770.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">隔离平台差异</text>
+  <rect x="985.0" y="169.0" width="250.0" height="92.0" fill="#F1F3F5" stroke="#68717A" stroke-width="2" rx="8"/>
+  <text x="1110.0" y="210.4" font-size="24" fill="#20252A" text-anchor="middle" font-weight="bold">多入口复用</text>
+  <text x="1110.0" y="236.4" font-size="21" fill="#888888" text-anchor="middle">终端、脚本与 Agent</text>
+</svg>
