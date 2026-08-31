@@ -2,6 +2,8 @@
 
 这是一个面向公众的项目介绍页面，介绍一种让工程师、自动化程序与 AI Agent 共用企业服务能力的 CLI 架构。
 
+在线阅读：[面向企业服务的 Agent CLI](https://hjl-echoandy.github.io/agent-cli-public-introduction/)
+
 ## 内容
 
 - index.html：可直接部署的静态介绍页面
